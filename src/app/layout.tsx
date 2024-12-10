@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import {Manrope} from 'next/font/google';
+import { Manrope } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
-
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme";
 
