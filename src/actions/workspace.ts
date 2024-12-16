@@ -99,3 +99,68 @@ export const getAllUserVideos = async (workSpaceId: string) => {
     return { status: 400, error, }
   }
 }
+
+export const getWorkSpaces = async () => {
+  try {
+    const user = await currentUser();
+    if(!user) return {status: 404}
+
+    const workspaces = await client.user.findUnique({
+      where: {
+        clerkid: user.id,
+      },
+      select: {
+        subscription: {
+          select: {
+            plan: true,
+          }
+        },
+        workspace: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+          }
+        },
+        members: {
+          select: {
+            WorkSpace: {
+              select: {
+                id: true,
+                name: true,
+                type: true,
+              }
+            }
+          }
+        }
+      }
+    });
+    if(workspaces) return { status: 200, data: workspaces }
+  } catch (error) {
+    return {status: 400, error}
+  }
+};
+
+export const getNotifications = async () => {
+ try {
+  const user = await currentUser();
+  if(!user) return { status: 400}
+  const notifications = await client.user.findUnique({
+    where: {
+      clerkid: user.id
+    },
+    select: {
+      notification: true,
+      _count: {
+        select:{
+          notification: true,
+        }
+      }
+    }
+  });
+  if(notifications && notifications.notification.length > 0 ) return {status:200, data: notifications}
+    return { status: 404, data: []}
+ } catch (error) {
+    return { status: 400, data: [], error}
+ }
+}
