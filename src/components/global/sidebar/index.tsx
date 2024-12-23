@@ -1,8 +1,14 @@
 'use client'
-import { Select, SelectContent, SelectGroup, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { getWorkSpaces } from '@/actions/workspace'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Separator } from '@/components/ui/separator'
+import { userQueryData } from '@/hooks/userQueryData'
+import { WorkspaceProps } from '@/types/index.types'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React from 'react'
+import Modal from '../modal'
+import { PlusCircle } from 'lucide-react'
 
 type Props = {
   activeWorkspaceId: string,
@@ -10,6 +16,10 @@ type Props = {
 
 const Sidebar = ({activeWorkspaceId}: Props) => {
   const router = useRouter();
+  const {data, isFetched} = userQueryData(['user-workspaces'], getWorkSpaces);
+
+  const { data: workspace} = data as WorkspaceProps;
+
   const onChangeActiveWorkSpace = (value:string) => {
     router.push(`/dashboard/${value}`)
   }
@@ -26,9 +36,29 @@ const Sidebar = ({activeWorkspaceId}: Props) => {
         <SelectContent className='bg-[#111111] backdrop-blur-xl'>
           <SelectGroup>
             <SelectLabel>Workspaces</SelectLabel>
+            <Separator />
+            {workspace?.workspace?.map((workspace) => <SelectItem key={workspace.id} value={workspace.id}>
+              {workspace.name}
+            </SelectItem>)}
+            {workspace?.members?.length > 0 && workspace?.members?.map((workspace) => workspace.workspace && (
+              <SelectItem key={workspace.Workspaces.id} value={workspace.Workspaces.id}>
+                {workspace.Workspaces.name}
+              </SelectItem>
+            )) }
           </SelectGroup>
         </SelectContent>
       </Select>
+
+      <Modal trigger={<span className='text-sm cursor-pointer flex items-center justify-center bg-neutral-800/90 hover:bg-neutral-800/60
+      w-full rounded-sm p-[5px] gap-2'>
+        <PlusCircle size={15} className='text-neutral-800/90 fill-neutral-500' />
+        <span className='text-neutral-400 font-semibold text-xs'> Invite To Workspace</span>
+      </span>} 
+      title="Invite To Workspace"
+      description='Invite other users to your workspace'
+      >
+        WorkspaceSearch
+      </Modal>
     </div>
   )
 }

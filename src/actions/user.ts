@@ -71,3 +71,40 @@ export const onAuthenticateUser = async () => {
     return { status: 500, error }
   }
 }
+export const searchUsers = async (query: string) => {
+  try {
+    const user = await currentUser();
+    if(!user) return {status: 404};
+    
+    const users = await client.user.findMany({
+      where: {
+        OR: [
+          { firstname: { contains: query }},
+          { email: { contains: query }},
+          { lastname: { contains: query}},
+        ],
+        NOT: [{clerkid: user.id}]
+      },
+
+      select: {
+        id: true,
+        subscription: {
+          select: {
+            plan: true,
+          }
+        },
+        firstname: true,
+        lastname: true,
+        email: true,
+      }
+
+    });
+
+    if(users && users.length > 0){
+      return { status: 200, data: user }
+    }
+    return { status: 404, data: undefined}
+  } catch (error) {
+    return { status: 500, error, data: undefined}
+  }
+}
