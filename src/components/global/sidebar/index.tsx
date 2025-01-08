@@ -10,6 +10,8 @@ import React from 'react'
 import Modal from '../modal'
 import { PlusCircle } from 'lucide-react'
 import Search from '../search'
+import { MENU_ITEMS } from '@/constants'
+import SideBarItem from './sidebar-item'
 
 type Props = {
   activeWorkspaceId: string,
@@ -18,12 +20,15 @@ type Props = {
 const Sidebar = ({activeWorkspaceId}: Props) => {
   const router = useRouter();
   const {data, isFetched} = userQueryData(['user-workspaces'], getWorkSpaces);
-
+  
+  const menuItems = MENU_ITEMS(activeWorkspaceId);
   const { data: workspace} = data as WorkspaceProps;
 
   const onChangeActiveWorkSpace = (value:string) => {
     router.push(`/dashboard/${value}`)
   }
+  const currentWorkspce = workspace.workspace.find((s) => s.id === activeWorkspaceId);
+
   return (
     <div className='bg-[#111111] flex-none relative p-4 h-full w-[250px] flex flex-col gap-4 items-center overflow-hidden'>
       <div className='bg-[#111111] p-4 gap-2 flex justify-center items-center mb-4 absolute top-0 right-0 left-0'>
@@ -50,6 +55,8 @@ const Sidebar = ({activeWorkspaceId}: Props) => {
         </SelectContent>
       </Select>
 
+     {currentWorkspce?.type === 'PUBLIC' &&
+     workspace?.subscription?.plan === 'PRO' &&
       <Modal trigger={<span className='text-sm cursor-pointer flex items-center justify-center bg-neutral-800/90 hover:bg-neutral-800/60
       w-full rounded-sm p-[5px] gap-2'>
         <PlusCircle size={15} className='text-neutral-800/90 fill-neutral-500' />
@@ -59,7 +66,16 @@ const Sidebar = ({activeWorkspaceId}: Props) => {
       description='Invite other users to your workspace'
       >
         <Search workspaceId={activeWorkspaceId}/>
-      </Modal>
+      </Modal>}
+        <p className='w-full text-[#9D9D9D] font-bold mt-4'>
+          <nav className='w-full'>
+            <ul>
+              {menuItems?.map(() => (
+                <SideBarItem></SidebarItem>
+              ))}
+            </ul>
+          </nav>
+        </p>
     </div>
   )
 }
