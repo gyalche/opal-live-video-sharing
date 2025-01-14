@@ -24,7 +24,7 @@ const SideBarItem = ({href, icon, title, selected, notifications}: Props) => {
             {title}
           </span>
         </div>
-        
+        {}
       </Link>
     </li>
   )
