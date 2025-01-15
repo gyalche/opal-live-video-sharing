@@ -8,11 +8,16 @@ import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
 import Modal from '../modal'
-import { PlusCircle } from 'lucide-react'
+import { Menu, PlusCircle } from 'lucide-react'
 import Search from '../search'
 import { MENU_ITEMS } from '@/constants'
 import SideBarItem from './sidebar-item'
 import WorkspacePlaceholder from './workspace-placeholder'
+import GlobalCard from '../global-card'
+import { Button } from '@/components/ui/button'
+import Loader from '../loader'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import InfoBar from '../info-bar'
 
 type Props = {
   activeWorkspaceId: string,
@@ -32,7 +37,7 @@ const Sidebar = ({activeWorkspaceId}: Props) => {
     router.push(`/dashboard/${value}`)
   }
   const currentWorkspce = workspace.workspace.find((s) => s.id === activeWorkspaceId);
-  return (
+  const SidebarSection = (
     <div className='bg-[#111111] flex-none relative p-4 h-full w-[250px] flex flex-col gap-4 items-center overflow-hidden'>
       <div className='bg-[#111111] p-4 gap-2 flex justify-center items-center mb-4 absolute top-0 right-0 left-0'>
         <Image src={'/opal-logo.svg'} height={40} width={40} alt="logo" />
@@ -128,9 +133,37 @@ const Sidebar = ({activeWorkspaceId}: Props) => {
                 }
             </ul>
           </nav>
+          <Separator className='w-4/5'/>
+          {workspace.subscription?.plan === 'FREE' && <GlobalCard 
+            title="Upgrade to Pro"
+            description='Unlock AI feature like transcription, AI summary and more'
+            footer={
+              <Button className='text-sm w-full'>
+                <Loader>Upgrade</Loader>
+              </Button>
+            }
+          />}
         </p>
     </div>
   )
+  return <div className='full'>
+    {/* INFOBAR */}
+    <InfoBar />
+    {/* Sheet mobile and desktop */}
+    <div className="md:hidden fixed my-4">
+      <Sheet>
+        <SheetTrigger asChild className='ml-2'>
+          <Button variant={'ghost'} className='mt-[2px]'>
+            <Menu />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side={'left'} className='p-0 w-fit h-full'>
+          {SidebarSection}
+        </SheetContent>
+      </Sheet>
+    </div>
+    <div className='md:block hidden h-full'>{SidebarSection}</div>
+  </div>
 }
 
 export default Sidebar
