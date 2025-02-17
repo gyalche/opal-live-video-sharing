@@ -16,7 +16,7 @@ const Search = ({workspaceId}: Props) => {
 
   return (
     <div className='flex flex-col gap-y-5'>
-      <Input onChange={onSearchQuery} 
+      <Input onChange={onSearchQuery}
         value={query} 
         className='bg-transparent border-2 outline-none'
         placeholder='Search for users'
@@ -64,4 +64,4 @@ const Search = ({workspaceId}: Props) => {
   )
 }
 
-export default Search
+export default Search;

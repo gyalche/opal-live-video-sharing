@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint \"src/**/*.{jsx,js,ts,tsx}\""
   },
   "dependencies": {
     "@clerk/nextjs": "^6.8.1",
@@ -45,6 +45,7 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.5.1",
+    "eslint-config-gurzu": "^1.1.0",
     "input-otp": "^1.4.1",
     "lucide-react": "^0.464.0",
     "next": "15.0.3",
@@ -62,10 +63,13 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.26.5",
+    "@stylistic/eslint-plugin-js": "^3.0.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
+    "eslint-config-airbnb": "^19.0.4",
     "eslint-config-next": "15.0.3",
     "postcss": "^8",
     "prisma": "^6.0.1",
