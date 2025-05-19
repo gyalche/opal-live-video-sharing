@@ -10,4 +10,4 @@ const AuthCallbackPage = async () => {
     return redirect('/auth/sign-in')
 }
 
-export default AuthCallbackPage
+export default AuthCallbackPage;
